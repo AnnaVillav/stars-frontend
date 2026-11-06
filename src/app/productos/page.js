@@ -1,16 +1,8 @@
+import { Suspense } from "react";
 import { apiRequest } from "@/lib/api";
 import FiltrosProductos from "@/components/FiltrosProductos";
+import TarjetaProducto from "@/components/TarjetaProducto";
 
-// Formatear los precios en pesos argentinos.
-function formatearPrecio(precio) {
-  return Number(precio).toLocaleString("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    maximumFractionDigits: 0,
-  });
-}
-
-// Obtener todos los registros de una API paginada.
 async function obtenerTodos(endpoint) {
   const registros = [];
   let pagina = 1;
@@ -29,16 +21,14 @@ async function obtenerTodos(endpoint) {
   return registros;
 }
 
-export default async function ProductosPage({ searchParams }) {
+async function ContenidoProductos({ searchParams }) {
   const parametros = await searchParams;
 
-  // Búsqueda recibida desde el buscador del Header.
   const busqueda =
     typeof parametros?.search === "string"
       ? parametros.search.trim()
       : "";
 
-  // Filtros seleccionados mediante la URL.
   const categoriaSeleccionada =
     typeof parametros?.categoria === "string"
       ? parametros.categoria
@@ -58,7 +48,6 @@ export default async function ProductosPage({ searchParams }) {
     let pagina = 1;
     let hayMas = true;
 
-    // Consultar todas las páginas de productos en Django.
     while (hayMas) {
       const consulta = new URLSearchParams({
         page: String(pagina),
@@ -77,13 +66,11 @@ export default async function ProductosPage({ searchParams }) {
       pagina++;
     }
 
-    // Obtener las categorías y marcas reales de Django.
     [categorias, marcas] = await Promise.all([
       obtenerTodos("/api/categorias/"),
       obtenerTodos("/api/marcas/"),
     ]);
 
-    // Buscar por nombre, categoría o marca.
     if (busqueda) {
       const texto = busqueda.toLocaleLowerCase("es");
 
@@ -105,7 +92,6 @@ export default async function ProductosPage({ searchParams }) {
       });
     }
 
-    // Aplicar los filtros por categoría y marca.
     productos = productos.filter((producto) => {
       const coincideCategoria =
         !categoriaSeleccionada ||
@@ -141,7 +127,6 @@ export default async function ProductosPage({ searchParams }) {
           </p>
         </div>
 
-        {/* Cantidad de productos encontrados */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold">
@@ -162,7 +147,6 @@ export default async function ProductosPage({ searchParams }) {
           </span>
         </div>
 
-        {/* Mensaje de error al consultar la API */}
         {error ? (
           <div
             role="alert"
@@ -171,10 +155,8 @@ export default async function ProductosPage({ searchParams }) {
             {error}
           </div>
         ) : (
-          /* Distribución: filtros a la izquierda y productos a la derecha */
           <div className="grid items-start gap-8 lg:grid-cols-[230px_minmax(0,1fr)]">
 
-            {/* Componente reutilizable de filtros */}
             <FiltrosProductos
               categorias={categorias}
               marcas={marcas}
@@ -197,77 +179,12 @@ export default async function ProductosPage({ searchParams }) {
                 </div>
               ) : (
                 <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-
-                  {productos.map((producto) => {
-                    const tieneOferta =
-                      producto.precio_oferta !== null &&
-                      producto.precio_oferta !== undefined;
-
-                    return (
-                      <article
-                        key={producto.id}
-                        className="flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-lg"
-                      >
-
-                        {/* Espacio reservado para la fotografía */}
-                        <div className="relative flex h-48 items-center justify-center border-b border-zinc-100 bg-[#f3f3f1] px-5">
-
-                          {tieneOferta && (
-                            <span className="absolute left-3 top-3 rounded bg-[#b68d3e] px-3 py-1 text-xs font-bold text-white">
-                              OFERTA
-                            </span>
-                          )}
-
-                          <span className="text-center text-sm font-medium text-zinc-400">
-                            {producto.categoria?.nombre}
-                          </span>
-                        </div>
-
-                        {/* Información del producto */}
-                        <div className="flex flex-1 flex-col p-5">
-                          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#a07b35]">
-                            {producto.marca?.nombre}
-                          </p>
-
-                          <h3 className="min-h-12 text-base font-bold leading-6">
-                            {producto.nombre}
-                          </h3>
-
-                          <p className="mt-2 line-clamp-2 text-sm leading-5 text-zinc-500">
-                            {producto.descripcion}
-                          </p>
-
-                          {/* Precio y oferta */}
-                          <div className="mt-auto pt-5">
-                            {tieneOferta ? (
-                              <>
-                                <p className="text-sm text-zinc-400 line-through">
-                                  {formatearPrecio(producto.precio)}
-                                </p>
-
-                                <p className="mt-1 text-2xl font-bold text-zinc-900">
-                                  {formatearPrecio(producto.precio_oferta)}
-                                </p>
-                              </>
-                            ) : (
-                              <p className="text-2xl font-bold text-zinc-900">
-                                {formatearPrecio(producto.precio)}
-                              </p>
-                            )}
-
-                            {/* Stock disponible */}
-                            <div className="mt-4 border-t border-zinc-100 pt-3">
-                              <p className="text-xs text-zinc-600">
-                                {producto.stock > 0
-                                  ? `Disponible · ${producto.stock} unidades`
-                                  : "Sin stock"}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </article>
-                    );
-                  })}
+                  {productos.map((producto) => (
+                    <TarjetaProducto
+                      key={producto.id}
+                      producto={producto}
+                    />
+                  ))}
                 </div>
               )}
             </section>
@@ -275,5 +192,21 @@ export default async function ProductosPage({ searchParams }) {
         )}
       </div>
     </main>
+  );
+}
+
+export default function ProductosPage({ searchParams }) {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#f7f7f5] px-6 py-16 text-center text-zinc-700">
+          <p role="status" className="text-lg font-medium">
+            Cargando instrumentos de STARS...
+          </p>
+        </main>
+      }
+    >
+      <ContenidoProductos searchParams={searchParams} />
+    </Suspense>
   );
 }
