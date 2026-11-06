@@ -13,7 +13,6 @@ export default function BuscadorProductos() {
   const [texto, setTexto] = useState(busquedaActual);
   const [textoAnterior, setTextoAnterior] = useState(busquedaActual);
 
-  // Sincronizar el campo cuando cambia la búsqueda en la URL.
   if (busquedaActual !== textoAnterior) {
     setTextoAnterior(busquedaActual);
     setTexto(busquedaActual);
