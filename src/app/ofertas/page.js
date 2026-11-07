@@ -1,8 +1,9 @@
 
 import { Suspense } from "react";
-import Link from "next/link";
 import { apiRequest } from "@/lib/api";
 import TarjetaProducto from "@/components/TarjetaProducto";
+import EncabezadoSeccion from "@/components/EncabezadoSeccion";
+import EstadoVacio from "@/components/EstadoVacio";
 
 // Obtiene todos los productos, incluyendo las páginas
 // adicionales que devuelve Django REST Framework.
@@ -50,14 +51,10 @@ async function ContenidoOfertas() {
             STARS / PROMOCIONES
           </p>
 
-          <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Ofertas imperdibles
-          </h1>
-
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-600">
-            Descubrí los instrumentos y accesorios que tienen
-            precios promocionales en nuestra tienda.
-          </p>
+          <EncabezadoSeccion
+            titulo="Ofertas imperdibles"
+            descripcion="Descubrí los instrumentos y accesorios que tienen precios promocionales en nuestra tienda."
+          />
         </div>
 
         {error ? (
@@ -68,23 +65,12 @@ async function ContenidoOfertas() {
             No pudimos cargar las ofertas. Intentá nuevamente.
           </div>
         ) : productosEnOferta.length === 0 ? (
-          <div className="rounded-xl border border-zinc-200 bg-white px-6 py-16 text-center">
-            <h2 className="text-xl font-semibold">
-              No hay ofertas disponibles por el momento
-            </h2>
-
-            <p className="mt-3 text-sm text-zinc-600">
-              Mientras tanto, podés explorar todos nuestros
-              instrumentos musicales.
-            </p>
-
-            <Link
-              href="/productos"
-              className="mt-7 inline-block rounded-lg bg-zinc-900 px-7 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700"
-            >
-              Ver todos los productos
-            </Link>
-          </div>
+          <EstadoVacio
+            titulo="No hay ofertas disponibles por el momento"
+            descripcion="Mientras tanto, podés explorar todos nuestros instrumentos musicales."
+            enlace="/productos"
+            textoEnlace="Ver todos los productos"
+          />
         ) : (
           <>
             <p className="mb-6 text-sm text-zinc-600">

@@ -2,6 +2,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { apiRequest } from "@/lib/api";
+import EncabezadoSeccion from "@/components/EncabezadoSeccion";
+import EstadoVacio from "@/components/EstadoVacio";
 
 async function obtenerCategorias() {
   const categorias = [];
@@ -44,11 +46,12 @@ async function ListadoCategorias() {
 
   if (categorias.length === 0) {
     return (
-      <div className="rounded-xl border border-zinc-200 bg-white p-10 text-center">
-        <p className="text-zinc-600">
-          Todavía no hay categorías disponibles.
-        </p>
-      </div>
+      <EstadoVacio
+        titulo="Todavía no hay categorías disponibles"
+        descripcion="Mientras tanto, podés explorar todos nuestros instrumentos musicales."
+        enlace="/productos"
+        textoEnlace="Ver todos los productos"
+      />
     );
   }
 
@@ -94,15 +97,10 @@ export default function CategoriasPage() {
             STARS / CATEGORÍAS
           </p>
 
-          <h1 className="text-3xl font-bold md:text-4xl">
-            Explorá nuestras categorías
-          </h1>
-
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-600">
-            Encontrá guitarras, bajos, teclados, baterías y más.
-            Elegí una categoría para descubrir los instrumentos
-            disponibles en nuestra tienda.
-          </p>
+          <EncabezadoSeccion
+            titulo="Explorá nuestras categorías"
+            descripcion="Encontrá guitarras, bajos, teclados, baterías y más. Elegí una categoría para descubrir los instrumentos disponibles en nuestra tienda."
+          />
         </div>
 
         <Suspense
