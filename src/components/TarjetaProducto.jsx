@@ -1,5 +1,6 @@
 
 import Image from "next/image";
+import Link from "next/link";
 
 const imagenesProductos = {
   1: "/productos/guitarra-yamaha-f310.jpg",
@@ -37,18 +38,24 @@ export default function TarjetaProducto({ producto }) {
     <article className="flex h-full flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white transition-shadow hover:shadow-md">
       <div className="relative flex h-56 items-center justify-center border-b border-zinc-100 bg-white p-5">
         {imagen ? (
-          <Image
-            src={imagen}
-            alt={producto.nombre}
-            width={350}
-            height={350}
-            className="h-full w-full object-contain"
-          />
-        ) : (
-          <span className="text-sm text-zinc-400">
-            Imagen no disponible
-          </span>
-        )}
+  <Link
+    href={`/productos/${producto.id}`}
+    aria-label={`Ver detalle de ${producto.nombre}`}
+    className="flex h-full w-full items-center justify-center"
+  >
+    <Image
+      src={imagen}
+      alt={producto.nombre}
+      width={350}
+      height={350}
+      className="h-full w-full object-contain"
+    />
+  </Link>
+) : (
+  <span className="text-sm text-zinc-400">
+    Imagen no disponible
+  </span>
+)}
 
         {tieneOferta && (
           <span className="absolute left-3 top-3 rounded bg-[#b68d3e] px-3 py-1 text-xs font-semibold text-white">
@@ -62,9 +69,14 @@ export default function TarjetaProducto({ producto }) {
           {producto.marca?.nombre}
         </p>
 
-        <h3 className="mt-2 text-base font-semibold leading-6 text-zinc-900">
-          {producto.nombre}
-        </h3>
+      <h3 className="mt-2 text-base font-semibold leading-6 text-zinc-900">
+  <Link
+    href={`/productos/${producto.id}`}
+    className="hover:text-[#99752f] hover:underline"
+  >
+    {producto.nombre}
+  </Link>
+</h3>
 
         <p className="mt-3 line-clamp-2 text-sm leading-5 text-zinc-500">
           {producto.descripcion}
