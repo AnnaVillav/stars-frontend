@@ -65,13 +65,11 @@ export default function Header() {
             Productos 
           </Link>
 
-          <Link href="/productos?ofertas=1" className="hover:text-[#a47d36]">
-            Ofertas
-          </Link>
+         <Link href="/ofertas">
+  Ofertas
+</Link>
 
-          <Link href="/#marcas" className="hover:text-[#a47d36]">
-            Marcas
-          </Link>
+        
 
           <Link href="/login" className="hover:text-[#a47d36]">
             Ingresar

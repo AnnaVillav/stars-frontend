@@ -113,9 +113,10 @@ async function SeccionesInicio() {
         </div>
       </section>
 
-      {/* NUESTRAS MARCAS */}
-      <section className="border-y border-zinc-200 bg-white py-12">
-        <div className="mx-auto max-w-7xl px-6 md:px-8">
+<section
+  id="marcas"
+  className="scroll-mt-24 border-y border-zinc-200 bg-white py-12"
+>        <div className="mx-auto max-w-7xl px-6 md:px-8">
           <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[#99752f]">
