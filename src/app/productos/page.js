@@ -142,9 +142,7 @@ async function ContenidoProductos({ searchParams }) {
             </p>
           </div>
 
-          <span className="rounded-full border border-[#dec99c] bg-[#faf5e9] px-4 py-2 text-xs font-semibold text-[#83601d]">
-            Catálogo STARS
-          </span>
+          
         </div>
 
         {error ? (

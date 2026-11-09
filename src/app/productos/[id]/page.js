@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { apiRequest } from "@/lib/api";
+import BotonAgregarCarrito from "@/components/BotonAgregarCarrito";
 
 const imagenesProductos = {
   1: "/productos/guitarra-yamaha-f310.jpg",
@@ -176,12 +177,8 @@ async function DetalleProducto({ params }) {
               </p>
             </div>
 
-            <Link
-              href="/productos"
-              className="mt-10 inline-flex rounded-lg bg-zinc-900 px-7 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700"
-            >
-              Volver al catálogo
-            </Link>
+            <BotonAgregarCarrito producto={producto} />
+            
           </section>
         </div>
       </div>
