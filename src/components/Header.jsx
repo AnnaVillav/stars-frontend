@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import BuscadorProductos from "@/components/BuscadorProductos";
 import CuentaHeader from "@/components/CuentaHeader";
+import CarritoHeader from "@/components/CarritoHeader";
 
 export default function Header() {
   return (
@@ -33,8 +34,9 @@ export default function Header() {
           </Suspense>
         </div>
 
-        {/* Cuenta del usuario */}
-        <CuentaHeader />
+      {/* Carrito y cuenta del usuario */}
+<CarritoHeader />
+<CuentaHeader />
       </div>
 
       {/* Menú principal */}
