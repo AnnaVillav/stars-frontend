@@ -20,6 +20,7 @@ export default function LoginPage() {
     setCargando(true);
 
     try {
+      // 1. Solicitar el token a Django.
       const respuesta = await apiRequest("/api/token/", {
         method: "POST",
         body: {
@@ -32,13 +33,25 @@ export default function LoginPage() {
         throw new Error("No se recibió el token.");
       }
 
+      // 2. Consultar los permisos del usuario autenticado.
+      const datosUsuario = await apiRequest("/api/me/", {
+        token: respuesta.token,
+      });
+
+      // 3. Guardar la sesión solamente si el token es válido.
       sessionStorage.setItem("stars_token", respuesta.token);
 
-      router.push("/gestion");
+      // 4. Redirigir según el tipo de usuario.
+      if (datosUsuario.is_staff === true) {
+        router.replace("/gestion");
+      } else {
+        router.replace("/productos");
+      }
+
       router.refresh();
     } catch {
       setError(
-        "No pudimos iniciar sesión. Verificá tu usuario y contraseña."
+        "No pudimos iniciar sesión. Verificá tus datos e intentá nuevamente."
       );
     } finally {
       setCargando(false);
@@ -57,8 +70,8 @@ export default function LoginPage() {
         </h1>
 
         <p className="mt-4 text-sm leading-7 text-zinc-600">
-          Ingresá con tu usuario y contraseña para acceder al panel de
-          administración.
+          Ingresá con tu usuario y contraseña para acceder a tu cuenta
+          de STARS.
         </p>
 
         <form onSubmit={iniciarSesion} className="mt-8 space-y-5">
@@ -121,6 +134,16 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-8 border-t border-zinc-200 pt-6">
+          <p className="mb-4 text-sm text-zinc-600">
+            ¿Todavía no tenés cuenta?{" "}
+            <Link
+              href="/registro"
+              className="font-semibold text-[#99752f] hover:underline"
+            >
+              Registrate
+            </Link>
+          </p>
+
           <Link
             href="/productos"
             className="text-sm font-semibold text-[#99752f] hover:underline"

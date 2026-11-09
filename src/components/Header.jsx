@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import BuscadorProductos from "@/components/BuscadorProductos";
+import CuentaHeader from "@/components/CuentaHeader";
 
 export default function Header() {
   return (
@@ -32,27 +33,8 @@ export default function Header() {
           </Suspense>
         </div>
 
-        <Link
-          href="/login"
-          aria-label="Ingresar a mi cuenta"
-          className="shrink-0 rounded-full p-2 text-zinc-800 transition hover:bg-zinc-100"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="8" r="4" />
-            <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
-          </svg>
-        </Link>
+        {/* Cuenta del usuario */}
+        <CuentaHeader />
       </div>
 
       {/* Menú principal */}
@@ -75,10 +57,6 @@ export default function Header() {
 
           <Link href="/ofertas" className="hover:text-[#a47d36]">
             Ofertas
-          </Link>
-
-          <Link href="/login" className="hover:text-[#a47d36]">
-            Ingresar
           </Link>
         </div>
       </nav>

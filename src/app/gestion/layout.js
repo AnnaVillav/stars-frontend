@@ -4,19 +4,48 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { apiRequest } from "@/lib/api";
 
 export default function GestionLayout({ children }) {
   const router = useRouter();
   const [autorizado, setAutorizado] = useState(false);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("stars_token");
+    let activo = true;
 
-    if (!token) {
-      router.replace("/login");
-    } else {
-      setAutorizado(true);
+    async function verificarPermisos() {
+      const token = sessionStorage.getItem("stars_token");
+
+      if (!token) {
+        router.replace("/login");
+        return;
+      }
+
+      try {
+        const usuario = await apiRequest("/api/me/", { token });
+
+        if (!activo) return;
+
+        if (usuario.is_staff === true) {
+          setAutorizado(true);
+        } else {
+          setAutorizado(false);
+          router.replace("/productos");
+        }
+      } catch {
+        if (!activo) return;
+
+        sessionStorage.removeItem("stars_token");
+        setAutorizado(false);
+        router.replace("/login");
+      }
     }
+
+    verificarPermisos();
+
+    return () => {
+      activo = false;
+    };
   }, [router]);
 
   function cerrarSesion() {
@@ -30,7 +59,7 @@ export default function GestionLayout({ children }) {
     return (
       <main className="flex min-h-[60vh] items-center justify-center bg-white px-6">
         <p role="status" className="text-sm text-zinc-600">
-          Verificando acceso al panel de gestión...
+          Verificando permisos de administrador...
         </p>
       </main>
     );
