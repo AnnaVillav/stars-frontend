@@ -1,5 +1,7 @@
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://stars-backend-5c8u.onrender.com";
 
 export async function apiRequest(
   endpoint,
@@ -17,7 +19,16 @@ export async function apiRequest(
     headers.Authorization = `Token ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const ruta = endpoint.replace(/^\/api\//, "/");
+
+  // En el navegador usamos el proxy para evitar CORS.
+  // En el servidor consultamos directamente a Django.
+  const url =
+    typeof window === "undefined"
+      ? `${BACKEND_URL}${endpoint}`
+      : `/api/proxy${ruta}`;
+
+  const response = await fetch(url, {
     method,
     headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
