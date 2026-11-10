@@ -61,9 +61,12 @@ export default function GestionPage() {
                 para crear, editar y eliminar productos.
               </p>
 
-              <span className="mt-7 inline-flex rounded-lg border border-zinc-200 bg-zinc-50 px-5 py-3 text-sm font-medium text-zinc-600">
-                Funciones en desarrollo
-              </span>
+              <Link
+  href="/gestion/productos"
+  className="mt-7 inline-flex rounded-lg bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700"
+>
+  Administrar productos
+</Link>
             </article>
           </div>
         </section>
